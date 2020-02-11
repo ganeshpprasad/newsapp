@@ -1,0 +1,29 @@
+{
+	"name": "newsApp",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "next",
+		"start": "next start",
+		"build": "next build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"newsapi": "^2.4.0",
+		"next": "^9.2.1",
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0",
+		"swr": "^0.1.16",
+		"unfetch": "^4.1.0",
+		"unfetcher": "^1.1.2"
+	},
+	"devDependencies": {
+		"@types/node": "^13.7.0",
+		"@types/react": "^16.9.19",
+		"typescript": "^3.7.5"
+	}
+}
