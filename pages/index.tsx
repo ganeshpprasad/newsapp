@@ -3,6 +3,7 @@ import useNews from "../hooks/useNews";
 
 import Today from "../components/Today";
 import Filters from "../components/Filters";
+import Search from "../components/Search";
 
 const Home = () => {
 	const [news] = useNews();
@@ -28,6 +29,7 @@ const Home = () => {
 	return (
 		<>
 			<Today />
+			<Search />
 			<Filters />
 			{articles}
 		</>

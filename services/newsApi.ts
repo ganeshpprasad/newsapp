@@ -1,7 +1,12 @@
 import fetch from "unfetch";
 import useSwr from "swr";
 
-import { NEWS_BASE_API, TOP_HEADLINES, COUNTRY } from "./constants";
+import {
+	NEWS_BASE_API,
+	TOP_HEADLINES,
+	COUNTRY,
+	generateAPI
+} from "./constants";
 
 const fetcher = async url => {
 	const res = await fetch(url);
@@ -9,8 +14,10 @@ const fetcher = async url => {
 	return json;
 };
 
-const fetchNews = () => {
+export const fetchNews = () => {
 	return useSwr(NEWS_BASE_API + TOP_HEADLINES + COUNTRY, fetcher);
 };
 
-export default fetchNews;
+export const searchNews = searchTerm => {
+	return useSwr(generateAPI(false, searchTerm));
+};
