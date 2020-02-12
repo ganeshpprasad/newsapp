@@ -1,12 +1,5 @@
 import fetch from "unfetch";
-import useSwr from "swr";
-
-import {
-	NEWS_BASE_API,
-	TOP_HEADLINES,
-	COUNTRY,
-	generateAPI
-} from "./constants";
+import { apiContent, generateAPI } from "./APIGenerator";
 
 const fetcher = async url => {
 	const res = await fetch(url);
@@ -14,10 +7,14 @@ const fetcher = async url => {
 	return json;
 };
 
-export const fetchNews = () => {
-	return useSwr(NEWS_BASE_API + TOP_HEADLINES + COUNTRY, fetcher);
+export const fetchNews = async () => {
+	return await fetcher(generateAPI(apiContent.TOP));
 };
 
-export const searchNews = searchTerm => {
-	return useSwr(generateAPI(false, searchTerm));
+export const searchNews = async searchTerm => {
+	return await fetcher(generateAPI(apiContent.EVERY, searchTerm));
+};
+
+export const fetchSources = async () => {
+	return await fetcher(generateAPI(apiContent.SOURCE));
 };
