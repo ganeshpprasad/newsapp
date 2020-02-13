@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import useNews from "../hooks/useNews";
 import { fetchNews, searchNews, fetchSources } from "../services/newsApi";
 import {
@@ -124,7 +125,7 @@ const Home = () => {
 	};
 
 	return (
-		<>
+		<MainDiv>
 			<Today />
 			<FilterDropDown
 				selected={country}
@@ -147,8 +148,14 @@ const Home = () => {
 			/>
 			<Filters />
 			{articles}
-		</>
+		</MainDiv>
 	);
 };
+
+const MainDiv = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
 
 export default Home;
