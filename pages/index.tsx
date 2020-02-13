@@ -128,11 +128,6 @@ const Home = () => {
 
 	return (
 		<>
-			<head>
-				<link
-					href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Montserrat:300,400&display=swap"
-					rel="stylesheet"></link>
-			</head>
 			<MainDiv>
 				<Today />
 				<FilterCon>

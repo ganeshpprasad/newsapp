@@ -25,9 +25,4 @@ const SearchDiv = styled.div`
 
 const SearchInput = styled.input`
 	height: 2rem;
-	width: 100%;
-	font-family: "merriweather";
-	padding-left: 0.3rem;
-	padding-top: 0.3rem;
-	letter-spacing: 0.05rem;
 `;
