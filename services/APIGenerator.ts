@@ -19,8 +19,7 @@ export enum country {
 	ENGLAND = "gb",
 	INDIA = "in",
 	USA = "us",
-	CHINA = "ch",
-	ALL = ""
+	CHINA = "ch"
 }
 
 // Sources
@@ -31,7 +30,8 @@ export enum category {
 	Health = "health",
 	Science = "science",
 	Sports = "sports",
-	Technology = "technology"
+	Technology = "technology",
+	None = ""
 }
 
 // Everything
@@ -41,16 +41,20 @@ export enum sortBy {
 	Newest = "publishedAt"
 }
 
-export const generateAPI = (_apiContent: apiContent, searchTerm?: String) => {
+export const generateAPI = (
+	_apiContent: apiContent,
+	searchTerm?: String,
+	country?: country,
+	category?: category
+) => {
+	const categoryFilter = !!category ? "&category=" + category : "";
 	const searchq = !!searchTerm
 		? "&q=" + searchTerm
-		: _apiContent === apiContent.TOP
-		? "&country=" + country.USA
+		: _apiContent === apiContent.TOP && !!country
+		? "&country=" + country
 		: ""; // top headlines should have country
-	const lang = _apiContent === apiContent.SOURCE ? "&language=en" : "";
+	const lang = "&language=en";
 	return (
-		NEWS_BASE_API + _apiContent + API_KEY + searchq + lang
-		// "&category=business"
-		// "&sources="
+		NEWS_BASE_API + _apiContent + API_KEY + searchq + categoryFilter + lang
 	);
 };

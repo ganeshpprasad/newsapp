@@ -7,8 +7,8 @@ const fetcher = async url => {
 	return json;
 };
 
-export const fetchNews = async () => {
-	return await fetcher(generateAPI(apiContent.TOP));
+export const fetchNews = async (country, category) => {
+	return await fetcher(generateAPI(apiContent.TOP, "", country, category));
 };
 
 export const searchNews = async searchTerm => {
