@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import useNews from "../hooks/useNews";
 import { fetchNews, searchNews, fetchSources } from "../services/newsApi";
@@ -35,6 +35,7 @@ const Home = () => {
 	const updateSearchResults = e => {
 		if (e.nativeEvent.keyCode == 13 && !!searchTerm) {
 			setIsSearching(true);
+			// searchRef.current.blur();
 		}
 	};
 
@@ -96,7 +97,7 @@ const Home = () => {
 		toggleHeadlines(e.target.checked);
 	};
 
-	const FilterDropDown = ({ selected, setFn, array }) => {
+	const FilterDropDown = ({ selected, setFn, array, label }) => {
 		let optionArray = [];
 		for (const val in array) {
 			const isSelected = array[val] === selected;
@@ -108,11 +109,12 @@ const Home = () => {
 		}
 
 		return (
-			<div>
-				<select id="" onChange={setFn}>
+			<FilterDiv>
+				<Label>{label}</Label>
+				<Select id="" onChange={setFn}>
 					{optionArray}
-				</select>
-			</div>
+				</Select>
+			</FilterDiv>
 		);
 	};
 
@@ -125,34 +127,70 @@ const Home = () => {
 	};
 
 	return (
-		<MainDiv>
-			<Today />
-			<FilterDropDown
-				selected={country}
-				setFn={_setCountry}
-				array={countryEnum}
-			/>
-			<FilterDropDown
-				selected={category}
-				setFn={_setCategory}
-				array={categoryEnum}
-			/>
-			<Search
-				searchTerm={searchTerm}
-				setSearchTerm={searchTermChanged}
-				searchNews={updateSearchResults}
-			/>
-			<HeadlinesCheckbox
-				isHeadlines={isHeadlines}
-				toggleHeadlines={_toggleHeadlines}
-			/>
-			<Filters />
-			{articles}
-		</MainDiv>
+		<>
+			<head>
+				<link
+					href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Montserrat:300,400&display=swap"
+					rel="stylesheet"></link>
+			</head>
+			<MainDiv>
+				<Today />
+				<FilterCon>
+					<FilterDropDown
+						selected={country}
+						setFn={_setCountry}
+						array={countryEnum}
+						label={"Country"}
+					/>
+					<FilterDropDown
+						selected={category}
+						setFn={_setCategory}
+						array={categoryEnum}
+						label={"Category"}
+					/>
+				</FilterCon>
+				<Search
+					searchTerm={searchTerm}
+					setSearchTerm={searchTermChanged}
+					searchNews={updateSearchResults}
+				/>
+				<HeadlinesCheckbox
+					isHeadlines={isHeadlines}
+					toggleHeadlines={_toggleHeadlines}
+				/>
+				<Filters />
+				{articles}
+			</MainDiv>
+		</>
 	);
 };
 
 const MainDiv = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: "Montserrat", sans-serif;
+`;
+
+const FilterCon = styled.div`
+	display: flex;
+	width: 60%;
+	align-items: center;
+	justify-content: space-around;
+	margin: 1rem;
+`;
+
+const Select = styled.select`
+	padding: 0.3rem;
+	background-color: white;
+	font-family: "Montserrat";
+`;
+
+const Label = styled.label`
+	margin-bottom: 0.5rem;
+`;
+
+const FilterDiv = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
