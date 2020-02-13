@@ -26,7 +26,7 @@ const Home = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [lang, setLang] = useState("en");
-	let articles: any = <p>Loading...</p>;
+	let articles: any = <Loading>Loading</Loading>;
 
 	const searchTermChanged = e => {
 		setSearchTerm(e.target.value);
@@ -54,6 +54,11 @@ const Home = () => {
 				.then(() => {
 					setIsSearching(false);
 					setSearchTerm("");
+				})
+				.catch(_ => {
+					articles = (
+						<div> Sorry something's wrong. Refresh may be!? </div>
+					);
 				});
 			console.log("isseach", isSearching);
 		}
@@ -65,17 +70,19 @@ const Home = () => {
 
 	if (news && news.status === "ok") {
 		articles = news.articles.map((article: any, ind) => {
+			const publish = new Date(article.publishedAt);
+			const smallTitle =
+				publish.toDateString() + " | " + article.source.name;
 			return (
-				<div key={ind}>
+				<ArticleDiv key={ind} href={article.url}>
+					<span>{smallTitle}</span>
 					<h2> {article.title} </h2>
-					<p>{article.author}</p>
-					<img src={article.urlToImage} alt="" />
-					<a href={article.url}> Open link </a>
-				</div>
+					<SP>{article.author}</SP>
+					<Img src={article.urlToImage} alt="" />
+					<SPC>{article.description}</SPC>
+				</ArticleDiv>
 			);
 		});
-	} else {
-		articles = <div> Sorry something's wrong. Refresh may be!? </div>;
 	}
 
 	const HeadlinesCheckbox = ({ isHeadlines, toggleHeadlines }) => {
@@ -149,12 +156,12 @@ const Home = () => {
 					setSearchTerm={searchTermChanged}
 					searchNews={updateSearchResults}
 				/>
-				<HeadlinesCheckbox
+				{/* <HeadlinesCheckbox
 					isHeadlines={isHeadlines}
 					toggleHeadlines={_toggleHeadlines}
-				/>
-				<Filters />
-				{articles}
+				/> */}
+				{/* <Filters /> */}
+				<ArticlesCon>{articles}</ArticlesCon>
 			</MainDiv>
 		</>
 	);
@@ -189,6 +196,70 @@ const FilterDiv = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+`;
+
+const ArticlesCon = styled.div`
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-column-gap: 10px;
+	justify-items: center;
+	width: 100%;
+	margin-top: 3rem;
+`;
+
+const ArticleDiv = styled.a`
+	width: 80%;
+	font-family: "Merriweather", serif;
+	color: black;
+	text-decoration: none;
+	padding: 4rem;
+	border-bottom: 1px solid #ccc;
+
+	span {
+		font-size: 0.6rem;
+	}
+
+	&:hover {
+		background: #fef;
+	}
+`;
+
+const SP = styled.p`
+	font-family: "Montserrat";
+	font-weight: 300;
+`;
+
+const SPC = styled.p`
+	font-family: "Montserrat";
+	letter-spacing: 0.03rem;
+`;
+
+const Img = styled.img`
+	width: 100%;
+	margin-bottom: 2rem;
+	margin-top: 2rem;
+`;
+
+const Loading = styled.span`
+	width: 100%;
+	grid-column-start: 1;
+	grid-column-end: 3;
+	text-align: center;
+
+	&::after {
+		content: ".";
+		animation: load 0.5s linear infinite;
+	}
+
+	@keyframes load {
+		50% {
+			content: "..";
+		}
+
+		75% {
+			content: "...";
+		}
+	}
 `;
 
 export default Home;
