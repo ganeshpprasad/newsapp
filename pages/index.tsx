@@ -21,7 +21,7 @@ const initData = {
 const Home = () => {
 	const [isHeadlines, toggleHeadlines] = useState(true);
 	const [country, setCountry] = useState(countryEnum.USA);
-	const [category, setCategory] = useState(categoryEnum.None);
+	const [category, setCategory] = useState(categoryEnum.General);
 	const [news, setNews] = useState(initData);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
@@ -104,6 +104,24 @@ const Home = () => {
 		toggleHeadlines(e.target.checked);
 	};
 
+	const CategoryList = ({ selected, setFn, array, label }) => {
+		let listarray = [];
+		for (const val in array) {
+			const isSelected = array[val] === selected;
+			listarray.push(
+				isSelected ? (
+					<SelectedOption value={array[val]}>{val}</SelectedOption>
+				) : (
+					<option value={array[val]} onClick={setFn}>
+						{val}
+					</option>
+				)
+			);
+		}
+
+		return <Categorys>{listarray}</Categorys>;
+	};
+
 	const FilterDropDown = ({ selected, setFn, array, label }) => {
 		let optionArray = [];
 		for (const val in array) {
@@ -117,7 +135,7 @@ const Home = () => {
 
 		return (
 			<FilterDiv>
-				<Label>{label}</Label>
+				{/* <Label>{label}</Label> */}
 				<Select id="" onChange={setFn}>
 					{optionArray}
 				</Select>
@@ -144,7 +162,7 @@ const Home = () => {
 						array={countryEnum}
 						label={"Country"}
 					/>
-					<FilterDropDown
+					<CategoryList
 						selected={category}
 						setFn={_setCategory}
 						array={categoryEnum}
@@ -183,13 +201,15 @@ const FilterCon = styled.div`
 `;
 
 const Select = styled.select`
-	padding: 0.3rem;
+	padding: 0.1rem;
 	background-color: white;
 	font-family: "Montserrat";
+	font-size: 0.6rem;
 `;
 
 const Label = styled.label`
 	margin-bottom: 0.5rem;
+	font-size: 0.5rem;
 `;
 
 const FilterDiv = styled.div`
@@ -260,6 +280,24 @@ const Loading = styled.span`
 			content: "...";
 		}
 	}
+`;
+
+const Categorys = styled.div`
+	display: flex;
+	align-items: center;
+
+	option {
+		padding: 1rem;
+		text-transform: uppercase;
+		font-family: "Merriweather";
+		cursor: pointer;
+		font-size: 0.6rem;
+	}
+`;
+
+const SelectedOption = styled.option`
+	font-weight: 500;
+	color: red;
 `;
 
 export default Home;

@@ -15,11 +15,11 @@ export enum apiContent {
 
 // country enum
 export enum country {
-	AUSTRALIA = "au",
-	ENGLAND = "gb",
-	INDIA = "in",
+	AUS = "au",
+	ENG = "gb",
+	IND = "in",
 	USA = "us",
-	CHINA = "ch"
+	CHI = "ch"
 }
 
 // Sources
@@ -30,8 +30,7 @@ export enum category {
 	Health = "health",
 	Science = "science",
 	Sports = "sports",
-	Technology = "technology",
-	None = ""
+	Technology = "technology"
 }
 
 // Everything
