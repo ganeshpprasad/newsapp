@@ -44,16 +44,24 @@ export const generateAPI = (
 	_apiContent: apiContent,
 	searchTerm?: String,
 	country?: country,
-	category?: category
+	category?: category,
+	sortBy?: sortBy
 ) => {
 	const categoryFilter = !!category ? "&category=" + category : "";
-	const searchq = !!searchTerm
-		? "&q=" + searchTerm
-		: _apiContent === apiContent.TOP && !!country
-		? "&country=" + country
-		: ""; // top headlines should have country
+	const searchq = !!searchTerm ? "&q=" + searchTerm : "";
+	const _country =
+		_apiContent === apiContent.TOP ? "&country=" + country : ""; // top headlines should have country
 	const lang = "&language=en";
+	const sort = !!sortBy ? "&sortBy=" + sortBy : "";
+	const conditionalParams =
+		_apiContent == apiContent.TOP ? categoryFilter : sort;
 	return (
-		NEWS_BASE_API + _apiContent + API_KEY + searchq + categoryFilter + lang
+		NEWS_BASE_API +
+		_apiContent +
+		API_KEY +
+		_country +
+		searchq +
+		conditionalParams +
+		lang
 	);
 };

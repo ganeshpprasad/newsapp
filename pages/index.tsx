@@ -4,7 +4,8 @@ import useNews from "../hooks/useNews";
 import { fetchNews, searchNews, fetchSources } from "../services/newsApi";
 import {
 	country as countryEnum,
-	category as categoryEnum
+	category as categoryEnum,
+	sortBy as sortByEnum
 } from "../services/APIGenerator";
 
 // import [ useNews ] from "../services/useNews";
@@ -25,6 +26,7 @@ const Home = () => {
 	const [news, setNews] = useState(initData);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
+	const [sortBySelected, setSortBy] = useState(sortByEnum.Relevant);
 	const [lang, setLang] = useState("en");
 	let articles: any = <Loading>Loading</Loading>;
 
@@ -45,28 +47,33 @@ const Home = () => {
 		fetchNews(country, category).then(news => setNews(news));
 	}, [country, category]);
 
+	const _searchNews = () => {
+		searchNews(searchTerm, isHeadlines, sortBySelected, country, category)
+			.then(news => setNews(news))
+			.then(() => {
+				setIsSearching(false);
+			})
+			.catch(_ => {
+				articles = (
+					<div> Sorry something's wrong. Refresh may be!? </div>
+				);
+			});
+	};
+
 	// Search case
 	useEffect(() => {
 		if (isSearching) {
-			// _searchNews();
-			searchNews(searchTerm)
-				.then(news => setNews(news))
-				.then(() => {
-					setIsSearching(false);
-					setSearchTerm("");
-				})
-				.catch(_ => {
-					articles = (
-						<div> Sorry something's wrong. Refresh may be!? </div>
-					);
-				});
-			console.log("isseach", isSearching);
+			_searchNews();
+		}
+
+		if (!!searchTerm) {
+			_searchNews();
 		}
 
 		return () => {
 			// cleanup
 		};
-	}, [isSearching]);
+	}, [isSearching, isHeadlines, sortBySelected]);
 
 	if (news && news.status === "ok") {
 		articles = news.articles.map((article: any, ind) => {
@@ -87,17 +94,38 @@ const Home = () => {
 
 	const HeadlinesCheckbox = ({ isHeadlines, toggleHeadlines }) => {
 		return (
-			<>
+			<CheckboxDiv>
 				<input
 					type="checkbox"
 					name="Headlines"
 					id=""
 					checked={isHeadlines}
 					onChange={toggleHeadlines}
+					disabled={!searchTerm}
 				/>
-				<span>{isHeadlines ? "Headlines" : "Everything"}</span>
-			</>
+				<label>
+					{isHeadlines ? "Today's Headlines" : "Everything"}
+				</label>
+				<div>
+					{FilterDropDown({
+						selected: sortBySelected,
+						setFn: _setSortBy,
+						array: sortByEnum,
+						label: "Sort By",
+						disabled: isHeadlines
+					})}
+					{/* <select name="sortby" id="" disabled={true}>
+						<option value={sortByEnum.Relevant}>Relevant</option>
+						<option value={sortByEnum.Newest}>Newest</option>
+						<option value={sortByEnum.Popular}>Popular</option>
+					</select> */}
+				</div>
+			</CheckboxDiv>
 		);
+	};
+
+	const _setSortBy = e => {
+		setSortBy(e.target.value);
 	};
 
 	const _toggleHeadlines = e => {
@@ -122,7 +150,7 @@ const Home = () => {
 		return <Categorys>{listarray}</Categorys>;
 	};
 
-	const FilterDropDown = ({ selected, setFn, array, label }) => {
+	const FilterDropDown = ({ selected, setFn, array, label, disabled }) => {
 		let optionArray = [];
 		for (const val in array) {
 			const isSelected = array[val] === selected;
@@ -136,7 +164,7 @@ const Home = () => {
 		return (
 			<FilterDiv>
 				{/* <Label>{label}</Label> */}
-				<Select id="" onChange={setFn}>
+				<Select id="" onChange={setFn} disabled={disabled}>
 					{optionArray}
 				</Select>
 			</FilterDiv>
@@ -161,6 +189,7 @@ const Home = () => {
 						setFn={_setCountry}
 						array={countryEnum}
 						label={"Country"}
+						disabled={false}
 					/>
 					<CategoryList
 						selected={category}
@@ -174,10 +203,10 @@ const Home = () => {
 					setSearchTerm={searchTermChanged}
 					searchNews={updateSearchResults}
 				/>
-				{/* <HeadlinesCheckbox
+				<HeadlinesCheckbox
 					isHeadlines={isHeadlines}
 					toggleHeadlines={_toggleHeadlines}
-				/> */}
+				/>
 				{/* <Filters /> */}
 				<ArticlesCon>{articles}</ArticlesCon>
 			</MainDiv>
@@ -298,6 +327,16 @@ const Categorys = styled.div`
 const SelectedOption = styled.option`
 	font-weight: 500;
 	color: red;
+`;
+
+const CheckboxDiv = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	label {
+		font-size: 0.6rem;
+	}
 `;
 
 export default Home;
