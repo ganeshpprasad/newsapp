@@ -1,17 +1,44 @@
 import React from "react";
 
-const Filters = () => {
+import styled from "styled-components";
+
+const FilterDropDown = ({ selected, setFn, array, label, disabled }) => {
+	let optionArray = [];
+	for (const val in array) {
+		const isSelected = array[val] === selected;
+		optionArray.push(
+			<option value={array[val]} selected={isSelected}>
+				{val}
+			</option>
+		);
+	}
+
 	return (
-		<div>
-			<h4>Filter by</h4>
-			<div>
-				<input type="checkbox" name="Willcomefromprops" id="" />
-			</div>
-			<div>
-				<input type="checkbox" name="topics" id="" />
-			</div>
-		</div>
+		<FilterDiv>
+			{/* <Label>{label}</Label> */}
+			<Select id="" onChange={setFn} disabled={disabled}>
+				{optionArray}
+			</Select>
+		</FilterDiv>
 	);
 };
 
-export default Filters;
+const Label = styled.label`
+	margin-bottom: 0.5rem;
+	font-size: 0.5rem;
+`;
+
+const FilterDiv = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
+const Select = styled.select`
+	padding: 0.1rem;
+	background-color: white;
+	font-family: "Montserrat";
+	font-size: 0.6rem;
+`;
+
+export default FilterDropDown;

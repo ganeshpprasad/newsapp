@@ -13,6 +13,10 @@ import {
 import Today from "../components/Today";
 import Filters from "../components/Filters";
 import Search from "../components/Search";
+import FilterDropDown from "../components/Filters";
+import CategoryList from "../components/CategoryList";
+import HeadlinesCheckbox from "../components/HeadlinesCheckbox";
+import { ArticleDiv, SP, Img, SPC } from "../components/Articles";
 
 const initData = {
 	status: "not ok",
@@ -92,83 +96,12 @@ const Home = () => {
 		});
 	}
 
-	const HeadlinesCheckbox = ({ isHeadlines, toggleHeadlines }) => {
-		return (
-			<CheckboxDiv>
-				<input
-					type="checkbox"
-					name="Headlines"
-					id=""
-					checked={isHeadlines}
-					onChange={toggleHeadlines}
-					disabled={!searchTerm}
-				/>
-				<label>
-					{isHeadlines ? "Today's Headlines" : "Everything"}
-				</label>
-				<div>
-					{FilterDropDown({
-						selected: sortBySelected,
-						setFn: _setSortBy,
-						array: sortByEnum,
-						label: "Sort By",
-						disabled: isHeadlines
-					})}
-					{/* <select name="sortby" id="" disabled={true}>
-						<option value={sortByEnum.Relevant}>Relevant</option>
-						<option value={sortByEnum.Newest}>Newest</option>
-						<option value={sortByEnum.Popular}>Popular</option>
-					</select> */}
-				</div>
-			</CheckboxDiv>
-		);
-	};
-
 	const _setSortBy = e => {
 		setSortBy(e.target.value);
 	};
 
 	const _toggleHeadlines = e => {
 		toggleHeadlines(e.target.checked);
-	};
-
-	const CategoryList = ({ selected, setFn, array, label }) => {
-		let listarray = [];
-		for (const val in array) {
-			const isSelected = array[val] === selected;
-			listarray.push(
-				isSelected ? (
-					<SelectedOption value={array[val]}>{val}</SelectedOption>
-				) : (
-					<option value={array[val]} onClick={setFn}>
-						{val}
-					</option>
-				)
-			);
-		}
-
-		return <Categorys>{listarray}</Categorys>;
-	};
-
-	const FilterDropDown = ({ selected, setFn, array, label, disabled }) => {
-		let optionArray = [];
-		for (const val in array) {
-			const isSelected = array[val] === selected;
-			optionArray.push(
-				<option value={array[val]} selected={isSelected}>
-					{val}
-				</option>
-			);
-		}
-
-		return (
-			<FilterDiv>
-				{/* <Label>{label}</Label> */}
-				<Select id="" onChange={setFn} disabled={disabled}>
-					{optionArray}
-				</Select>
-			</FilterDiv>
-		);
 	};
 
 	const _setCountry = e => {
@@ -206,6 +139,10 @@ const Home = () => {
 				<HeadlinesCheckbox
 					isHeadlines={isHeadlines}
 					toggleHeadlines={_toggleHeadlines}
+					sortByEnum={sortByEnum}
+					sortBySelected={sortBySelected}
+					_setSortBy={_setSortBy}
+					searchTerm={searchTerm}
 				/>
 				{/* <Filters /> */}
 				<ArticlesCon>{articles}</ArticlesCon>
@@ -229,24 +166,6 @@ const FilterCon = styled.div`
 	margin: 1rem;
 `;
 
-const Select = styled.select`
-	padding: 0.1rem;
-	background-color: white;
-	font-family: "Montserrat";
-	font-size: 0.6rem;
-`;
-
-const Label = styled.label`
-	margin-bottom: 0.5rem;
-	font-size: 0.5rem;
-`;
-
-const FilterDiv = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-`;
-
 const ArticlesCon = styled.div`
 	display: grid;
 	grid-template-columns: 50% 50%;
@@ -254,39 +173,6 @@ const ArticlesCon = styled.div`
 	justify-items: center;
 	width: 100%;
 	margin-top: 3rem;
-`;
-
-const ArticleDiv = styled.a`
-	width: 80%;
-	font-family: "Merriweather", serif;
-	color: black;
-	text-decoration: none;
-	padding: 4rem;
-	border-bottom: 1px solid #ccc;
-
-	span {
-		font-size: 0.6rem;
-	}
-
-	&:hover {
-		background: #fef;
-	}
-`;
-
-const SP = styled.p`
-	font-family: "Montserrat";
-	font-weight: 300;
-`;
-
-const SPC = styled.p`
-	font-family: "Montserrat";
-	letter-spacing: 0.03rem;
-`;
-
-const Img = styled.img`
-	width: 100%;
-	margin-bottom: 2rem;
-	margin-top: 2rem;
 `;
 
 const Loading = styled.span`
@@ -308,34 +194,6 @@ const Loading = styled.span`
 		75% {
 			content: "...";
 		}
-	}
-`;
-
-const Categorys = styled.div`
-	display: flex;
-	align-items: center;
-
-	option {
-		padding: 1rem;
-		text-transform: uppercase;
-		font-family: "Merriweather";
-		cursor: pointer;
-		font-size: 0.6rem;
-	}
-`;
-
-const SelectedOption = styled.option`
-	font-weight: 500;
-	color: red;
-`;
-
-const CheckboxDiv = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	label {
-		font-size: 0.6rem;
 	}
 `;
 
