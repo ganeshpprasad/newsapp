@@ -29,11 +29,6 @@ const HeadlinesCheckbox = ({
 					label: "Sort By",
 					disabled: isHeadlines
 				})}
-				{/* <select name="sortby" id="" disabled={true}>
-						<option value={sortByEnum.Relevant}>Relevant</option>
-						<option value={sortByEnum.Newest}>Newest</option>
-						<option value={sortByEnum.Popular}>Popular</option>
-					</select> */}
 			</div>
 		</CheckboxDiv>
 	);

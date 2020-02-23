@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import useNews from "../hooks/useNews";
 import { fetchNews, searchNews, fetchSources } from "../services/newsApi";
 import {
 	country as countryEnum,
@@ -31,8 +30,6 @@ const Home = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [sortBySelected, setSortBy] = useState(sortByEnum.Relevant);
-	const [lang, setLang] = useState("en");
-	let articles: any = <Loading>Loading</Loading>;
 
 	const searchTermChanged = e => {
 		setSearchTerm(e.target.value);
@@ -57,11 +54,7 @@ const Home = () => {
 			.then(() => {
 				setIsSearching(false);
 			})
-			.catch(_ => {
-				articles = (
-					<div> Sorry something's wrong. Refresh may be!? </div>
-				);
-			});
+			.catch(_ => {});
 	};
 
 	// Search case
@@ -79,22 +72,31 @@ const Home = () => {
 		};
 	}, [isSearching, isHeadlines, sortBySelected]);
 
-	if (news && news.status === "ok") {
-		articles = news.articles.map((article: any, ind) => {
-			const publish = new Date(article.publishedAt);
-			const smallTitle =
-				publish.toDateString() + " | " + article.source.name;
-			return (
-				<ArticleDiv key={ind} href={article.url}>
-					<span>{smallTitle}</span>
-					<h2> {article.title} </h2>
-					<SP>{article.author}</SP>
-					<Img src={article.urlToImage} alt="" />
-					<SPC>{article.description}</SPC>
-				</ArticleDiv>
-			);
-		});
-	}
+	// useEffect(() => {
+	const getNewsArticles = () => {
+		if (news && news.status === "ok") {
+			return news.articles.map((article: any, ind) => {
+				const publish = new Date(article.publishedAt);
+				const smallTitle =
+					publish.toDateString() + " | " + article.source.name;
+				return (
+					<ArticleDiv key={ind} href={article.url}>
+						<span>{smallTitle}</span>
+						<h2> {article.title} </h2>
+						<SP>{article.author}</SP>
+						<Img src={article.urlToImage} alt="" />
+						<SPC>{article.description}</SPC>
+					</ArticleDiv>
+				);
+			});
+		} else {
+			return <Loading>Loading</Loading>;
+		}
+	};
+	// 	return () => {
+	// 		// cleanup;
+	// 	};
+	// }, [news]);
 
 	const _setSortBy = e => {
 		setSortBy(e.target.value);
@@ -145,7 +147,7 @@ const Home = () => {
 					searchTerm={searchTerm}
 				/>
 				{/* <Filters /> */}
-				<ArticlesCon>{articles}</ArticlesCon>
+				<ArticlesCon>{getNewsArticles()}</ArticlesCon>
 			</MainDiv>
 		</>
 	);
