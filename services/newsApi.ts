@@ -1,5 +1,9 @@
 import fetch from "unfetch";
-import { apiContent, generateAPI } from "./APIGenerator";
+import {
+	generateEveryAPI,
+	generateTopHeadlinesAPI,
+	generateSourcesAPI
+} from "./APIGenerator";
 
 const fetcher = async url => {
 	const res = await fetch(url);
@@ -8,7 +12,7 @@ const fetcher = async url => {
 };
 
 export const fetchNews = async (country, category) => {
-	return await fetcher(generateAPI(apiContent.TOP, "", country, category));
+	return await fetcher(generateTopHeadlinesAPI(country, category, ""));
 };
 
 export const searchNews = async (
@@ -19,16 +23,12 @@ export const searchNews = async (
 	category
 ) => {
 	return await fetcher(
-		generateAPI(
-			isHeadlines ? apiContent.TOP : apiContent.EVERY,
-			searchTerm,
-			country,
-			category,
-			sortby
-		)
+		isHeadlines
+			? generateTopHeadlinesAPI(country, category, searchTerm)
+			: generateEveryAPI(searchTerm, sortby)
 	);
 };
 
 export const fetchSources = async () => {
-	return await fetcher(generateAPI(apiContent.SOURCE));
+	return await fetcher(generateSourcesAPI());
 };

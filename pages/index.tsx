@@ -6,7 +6,7 @@ import {
 	country as countryEnum,
 	category as categoryEnum,
 	sortBy as sortByEnum
-} from "../services/APIGenerator";
+} from "../services/constants";
 
 // import [ useNews ] from "../services/useNews";
 
