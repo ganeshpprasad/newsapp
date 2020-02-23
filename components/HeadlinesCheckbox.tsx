@@ -38,9 +38,11 @@ const CheckboxDiv = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 1rem;
 
 	label {
-		font-size: 0.6rem;
+		font-size: 0.7rem;
+		margin-right: 1rem;
 	}
 `;
 
