@@ -6,6 +6,9 @@ import {
 	category as categoryEnum,
 	sortBy as sortByEnum
 } from "../services/constants";
+import { FacebookShareButton } from "react-share";
+
+// import fb from "../assets/img/fb.png";
 
 // import [ useNews ] from "../services/useNews";
 
@@ -86,6 +89,9 @@ const Home = () => {
 						<SP>{article.author}</SP>
 						<Img src={article.urlToImage} alt="" />
 						<SPC>{article.description}</SPC>
+						<FacebookShareButton url={article.url}>
+							<img src={require("../assets/img/fb.png")} alt="" />
+						</FacebookShareButton>
 					</ArticleDiv>
 				);
 			});
