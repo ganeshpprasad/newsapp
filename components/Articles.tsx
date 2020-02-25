@@ -6,14 +6,12 @@ export const ArticleDiv = styled.a`
 	color: black;
 	text-decoration: none;
 	padding: 4rem;
-	border-bottom: 1px solid #ccc;
+	flex-direction: column;
+	display: flex;
+	justify-content: flex-start;
 
 	span {
 		font-size: 0.6rem;
-	}
-
-	&:hover {
-		background: #fef;
 	}
 `;
 

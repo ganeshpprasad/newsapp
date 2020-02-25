@@ -6,7 +6,11 @@ import {
 	category as categoryEnum,
 	sortBy as sortByEnum
 } from "../services/constants";
-import { FacebookShareButton } from "react-share";
+import {
+	FacebookShareButton,
+	LinkedinShareButton,
+	TwitterShareButton
+} from "react-share";
 
 // import fb from "../assets/img/fb.png";
 
@@ -83,16 +87,26 @@ const Home = () => {
 				const smallTitle =
 					publish.toDateString() + " | " + article.source.name;
 				return (
-					<ArticleDiv key={ind} href={article.url}>
-						<span>{smallTitle}</span>
-						<h2> {article.title} </h2>
-						<SP>{article.author}</SP>
-						<Img src={article.urlToImage} alt="" />
-						<SPC>{article.description}</SPC>
-						<FacebookShareButton url={article.url}>
-							<img src={require("../assets/img/fb.png")} alt="" />
-						</FacebookShareButton>
-					</ArticleDiv>
+					<ConDiv>
+						<ArticleDiv key={ind} href={article.url}>
+							<span>{smallTitle}</span>
+							<h2> {article.title} </h2>
+							<SP>{article.author}</SP>
+							<Img src={article.urlToImage} alt="" />
+							<SPC>{article.description}</SPC>
+						</ArticleDiv>
+						<ShareDiv>
+							<FacebookShareButton url={article.url}>
+								<ShareImg src="/fb.svg" alt="" />
+							</FacebookShareButton>
+							<TwitterShareButton url={article.url}>
+								<ShareImg src="/twitter.svg" alt="" />
+							</TwitterShareButton>
+							<LinkedinShareButton url={article.url}>
+								<ShareImg src="/linkedin.svg" alt="" />
+							</LinkedinShareButton>
+						</ShareDiv>
+					</ConDiv>
 				);
 			});
 		} else {
@@ -202,6 +216,28 @@ const Loading = styled.span`
 		75% {
 			content: "...";
 		}
+	}
+`;
+
+const ShareImg = styled.img`
+	width: 30px;
+	height: 30px;
+`;
+
+const ShareDiv = styled.div`
+	display: flex;
+	padding: 1rem;
+	justify-content: space-evenly;
+`;
+
+const ConDiv = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	border-bottom: 1px solid #ccc;
+
+	&:hover {
+		background: #fef;
 	}
 `;
 
