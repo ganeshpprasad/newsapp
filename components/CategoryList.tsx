@@ -7,9 +7,11 @@ const CategoryList = ({ selected, setFn, array, label }) => {
 		const isSelected = array[val] === selected;
 		listarray.push(
 			isSelected ? (
-				<SelectedOption value={array[val]}>{val}</SelectedOption>
+				<SelectedOption key={val} value={array[val]}>
+					{val}
+				</SelectedOption>
 			) : (
-				<option value={array[val]} onClick={setFn}>
+				<option key={val} value={array[val]} onClick={setFn}>
 					{val}
 				</option>
 			)

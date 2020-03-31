@@ -20,7 +20,6 @@
 		"react-dom": "^16.12.0",
 		"react-share": "^4.0.1",
 		"styled-components": "^5.0.1",
-		"swr": "^0.1.16",
 		"unfetch": "^4.1.0"
 	},
 	"devDependencies": {

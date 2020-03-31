@@ -12,12 +12,7 @@ import {
 	TwitterShareButton
 } from "react-share";
 
-// import fb from "../assets/img/fb.png";
-
-// import [ useNews ] from "../services/useNews";
-
 import Today from "../components/Today";
-import Filters from "../components/Filters";
 import Search from "../components/Search";
 import FilterDropDown from "../components/Filters";
 import CategoryList from "../components/CategoryList";
@@ -29,31 +24,35 @@ const initData = {
 	articles: [<p>Loading...</p>]
 };
 
+export async function getStaticProps() {
+	// Call an external API endpoint to get posts.
+	const res = await fetchNews(countryEnum.USA, categoryEnum.General);
+
+	// By returning { props: posts }, the Blog component
+	// will receive `posts` as a prop at build time
+	return {
+		props: {
+			news: res
+		}
+	};
+}
+
 const Home = () => {
+	// state
+	const didMountRef = useRef(false);
 	const [isHeadlines, toggleHeadlines] = useState(true);
 	const [country, setCountry] = useState(countryEnum.USA);
 	const [category, setCategory] = useState(categoryEnum.General);
-	const [news, setNews] = useState(initData);
+	const [news, setNews] = useState(props.news);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [sortBySelected, setSortBy] = useState(sortByEnum.Relevant);
 
-	const searchTermChanged = e => {
-		setSearchTerm(e.target.value);
-	};
+	// change handlers
+	const searchTermChanged = e => setSearchTerm(e.target.value);
 
-	const updateSearchResults = e => {
-		if (e.nativeEvent.keyCode == 13 && !!searchTerm) {
-			setIsSearching(true);
-			// searchRef.current.blur();
-		}
-	};
-
-	// Headlines case
-	useEffect(() => {
-		fetchSources().then(sources => console.log("sour", sources));
-		fetchNews(country, category).then(news => setNews(news));
-	}, [country, category]);
+	const updateSearchResults = e =>
+		e.nativeEvent.keyCode == 13 && !!searchTerm && setIsSearching(true);
 
 	const _searchNews = () => {
 		searchNews(searchTerm, isHeadlines, sortBySelected, country, category)
@@ -64,11 +63,20 @@ const Home = () => {
 			.catch(_ => {});
 	};
 
+	// Headlines case
+	useEffect(() => {
+		if (didMountRef.current) {
+			fetchNews(country, category).then(news => setNews(news));
+		} else {
+			console.log("first");
+			didMountRef.current = true;
+			fetchSources();
+		}
+	}, [country, category]);
+
 	// Search case
 	useEffect(() => {
-		if (isSearching) {
-			_searchNews();
-		}
+		console.log("sec");
 
 		if (!!searchTerm) {
 			_searchNews();
@@ -87,8 +95,8 @@ const Home = () => {
 				const smallTitle =
 					publish.toDateString() + " | " + article.source.name;
 				return (
-					<ConDiv>
-						<ArticleDiv key={ind} href={article.url}>
+					<ConDiv key={ind}>
+						<ArticleDiv href={article.url}>
 							<span>{smallTitle}</span>
 							<h2> {article.title} </h2>
 							<SP>{article.author}</SP>
@@ -113,10 +121,6 @@ const Home = () => {
 			return <Loading>Loading</Loading>;
 		}
 	};
-	// 	return () => {
-	// 		// cleanup;
-	// 	};
-	// }, [news]);
 
 	const _setSortBy = e => {
 		setSortBy(e.target.value);
