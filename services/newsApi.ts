@@ -1,9 +1,9 @@
-import fetch from "unfetch";
+import fetch from 'node-fetch';
 import {
 	generateEveryAPI,
 	generateTopHeadlinesAPI,
-	generateSourcesAPI
-} from "./APIGenerator";
+	generateSourcesAPI,
+} from './APIGenerator';
 
 const fetcher = async url => {
 	const res = await fetch(url);
@@ -12,7 +12,7 @@ const fetcher = async url => {
 };
 
 export const fetchNews = async (country, category) => {
-	return await fetcher(generateTopHeadlinesAPI(country, category, ""));
+	return await fetcher(generateTopHeadlinesAPI(country, category, ''));
 };
 
 export const searchNews = async (

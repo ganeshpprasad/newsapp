@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { fetchNews, searchNews, fetchSources } from "../services/newsApi";
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { fetchNews, searchNews, fetchSources } from '../services/newsApi';
 import {
 	country as countryEnum,
 	category as categoryEnum,
-	sortBy as sortByEnum
-} from "../services/constants";
+	sortBy as sortByEnum,
+} from '../services/constants';
 import {
 	FacebookShareButton,
 	LinkedinShareButton,
-	TwitterShareButton
-} from "react-share";
+	TwitterShareButton,
+} from 'react-share';
 
-import Today from "../components/Today";
-import Search from "../components/Search";
-import FilterDropDown from "../components/Filters";
-import CategoryList from "../components/CategoryList";
-import HeadlinesCheckbox from "../components/HeadlinesCheckbox";
-import { ArticleDiv, SP, Img, SPC } from "../components/Articles";
+import Today from '../components/Today';
+import Search from '../components/Search';
+import FilterDropDown from '../components/Filters';
+import CategoryList from '../components/CategoryList';
+import HeadlinesCheckbox from '../components/HeadlinesCheckbox';
+import { ArticleDiv, SP, Img, SPC } from '../components/Articles';
 
 const initData = {
-	status: "not ok",
-	articles: [<p>Loading...</p>]
+	status: 'not ok',
+	articles: [<p>Loading...</p>],
 };
 
 export async function getStaticProps() {
@@ -30,21 +30,23 @@ export async function getStaticProps() {
 
 	// By returning { props: posts }, the Blog component
 	// will receive `posts` as a prop at build time
+	console.log('res', res);
+
 	return {
 		props: {
-			news: res
-		}
+			news: res,
+		},
 	};
 }
 
-const Home = () => {
+const Home = props => {
 	// state
 	const didMountRef = useRef(false);
 	const [isHeadlines, toggleHeadlines] = useState(true);
 	const [country, setCountry] = useState(countryEnum.USA);
 	const [category, setCategory] = useState(categoryEnum.General);
 	const [news, setNews] = useState(props.news);
-	const [searchTerm, setSearchTerm] = useState("");
+	const [searchTerm, setSearchTerm] = useState('');
 	const [isSearching, setIsSearching] = useState(false);
 	const [sortBySelected, setSortBy] = useState(sortByEnum.Relevant);
 
@@ -68,7 +70,7 @@ const Home = () => {
 		if (didMountRef.current) {
 			fetchNews(country, category).then(news => setNews(news));
 		} else {
-			console.log("first");
+			console.log('first');
 			didMountRef.current = true;
 			fetchSources();
 		}
@@ -76,7 +78,7 @@ const Home = () => {
 
 	// Search case
 	useEffect(() => {
-		console.log("sec");
+		console.log('sec');
 
 		if (!!searchTerm) {
 			_searchNews();
@@ -89,11 +91,13 @@ const Home = () => {
 
 	// useEffect(() => {
 	const getNewsArticles = () => {
-		if (news && news.status === "ok") {
+		console.log('news', news);
+
+		if (news && news.status === 'ok') {
 			return news.articles.map((article: any, ind) => {
 				const publish = new Date(article.publishedAt);
 				const smallTitle =
-					publish.toDateString() + " | " + article.source.name;
+					publish.toDateString() + ' | ' + article.source.name;
 				return (
 					<ConDiv key={ind}>
 						<ArticleDiv href={article.url}>
@@ -147,14 +151,14 @@ const Home = () => {
 						selected={country}
 						setFn={_setCountry}
 						array={countryEnum}
-						label={"Country"}
+						label={'Country'}
 						disabled={false}
 					/>
 					<CategoryList
 						selected={category}
 						setFn={_setCategory}
 						array={categoryEnum}
-						label={"Category"}
+						label={'Category'}
 					/>
 				</FilterCon>
 				<Search
@@ -181,7 +185,7 @@ const MainDiv = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: "Montserrat", sans-serif;
+	font-family: 'Montserrat', sans-serif;
 `;
 
 const FilterCon = styled.div`
@@ -208,17 +212,17 @@ const Loading = styled.span`
 	text-align: center;
 
 	&::after {
-		content: ".";
+		content: '.';
 		animation: load 0.5s linear infinite;
 	}
 
 	@keyframes load {
 		50% {
-			content: "..";
+			content: '..';
 		}
 
 		75% {
-			content: "...";
+			content: '...';
 		}
 	}
 `;
